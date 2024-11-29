@@ -1,22 +1,23 @@
 import './App.css';
+import { Box, Typography } from '@mui/material';
 
 function App() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <p>
+    <Box className="app">
+      <Box className="app-header">
+        <Typography variant='h4' sx={{ mb: '20px' }}>
           Book An Appointment
-        </p>
-        <div className="app-body">
-          <div className="app-box">
+        </Typography>
+        <Box className="app-body">
+          <Box className="app-box">
             Info Box
-          </div>
-          <div className="app-box">
+          </Box>
+          <Box className="app-box">
             Forms Box
-          </div>
-        </div>
-      </header>
-    </div>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
