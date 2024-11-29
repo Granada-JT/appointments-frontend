@@ -1,4 +1,5 @@
 import './App.css';
+import AppointmentForm from './components/AppointmentForm';
 import { Box, Typography } from '@mui/material';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
             Info Box
           </Box>
           <Box className="app-box">
-            Forms Box
+            <AppointmentForm />
           </Box>
         </Box>
       </Box>
