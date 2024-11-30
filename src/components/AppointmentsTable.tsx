@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { deleteAppointment } from '../api/api';
 import { Box, Button, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -23,6 +23,7 @@ interface AppointmentsTableProps {
   endDate: Date;
   setEndDate: (date: Date) => void;
   setEditRowId: (id: number) => void;
+  fetchAppointments: () => void;
 }
 
 const AppointmentsTable = (props: AppointmentsTableProps) => {
@@ -32,8 +33,25 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     setStartDate,
     endDate,
     setEndDate,
-    setEditRowId
+    setEditRowId,
+    fetchAppointments
   } = props;
+
+  const handleDeleteAppointment = async(id: number) => {
+    try {
+      if (id) {
+        const response = await deleteAppointment(id);
+        if (response.status === 200) {
+          fetchAppointments()
+          alert('Appointment Deleted Successfully');
+        }
+      }
+    } catch(error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+  }
 
   const columns: GridColDef[] = [
     { 
@@ -152,7 +170,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', height: '100%' }}>
             <Button color="info" variant="contained" onClick={() => setEditRowId(row.id)}>Edit</Button>
-            <Button color="error" variant="contained">Delete</Button>
+            <Button color="error" variant="contained" onClick={() => handleDeleteAppointment(row.id)}>Delete</Button>
           </Box>
         );
       }

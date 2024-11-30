@@ -37,11 +37,15 @@ export const editAppointment = async (data) => {
 }
 
 export const deleteAppointment = async (data) => {
+  console.log('data',data)
   try {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/delete`, data);
-    return response.data;
+    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/appointment/delete/${data}`);
+    return {
+      status: response.status,
+      message: response.data.message
+    };
   } catch(error) {
     console.error(error);
-    return error.message
+    throw new Error(error.response.data.error)
   }
 }

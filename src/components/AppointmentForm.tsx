@@ -73,7 +73,6 @@ const AppointmentForm = (props: AppointmentFormProps) => {
 
   const onSubmit = async (data: FormDataTypes) => {
     try {
-  
       if (data && editAppointment) {
         const appointmentData = {
           id: editAppointment.id,
