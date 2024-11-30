@@ -93,55 +93,31 @@ const AppointmentForm = (props: AppointmentFormProps) => {
   }, [editAppointment]);
 	
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl fullWidth>
-        <Controller 
-          name='name'
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { value, onChange }}) => (
-            <TextField 
-              type='text'
-              label='Name'
-              variant='filled'
-              color='info'
-              value={value}
-              onChange={(e) => {
-                onChange(e)
-                setValue('name', e.target.value)
-              }}
-              error={Boolean(errors.name)}
-              fullWidth={true}
-            />
-          )}
-        />
-        {errors.name && (
-          <FormHelperText 
-            sx={{ color: 'error.main' }}
-            id='validation-message'
-          >
-          This field is required
-          </FormHelperText>
-        )}
-      </FormControl>
-      <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-        <Typography sx={{ width: '230px'}} align="left">Start Date and Time:</Typography>
+    <Box>
+      <Typography variant="h5" sx={{ mb: "10px" }}>Appointment Form</Typography>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl fullWidth>
           <Controller 
-            name='startDateTime'
+            name='name'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange }}) => (
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileDateTimePicker
-                  key={key}
-                  defaultValue={dayjs(value)}
-                  onChange={(date) => {onChange(date?.toDate())}}
-                />
-              </LocalizationProvider>
+              <TextField 
+                type='text'
+                label='Name'
+                variant='filled'
+                color='info'
+                value={value}
+                onChange={(e) => {
+                  onChange(e)
+                  setValue('name', e.target.value)
+                }}
+                error={Boolean(errors.name)}
+                fullWidth={true}
+              />
             )}
           />
-          {errors.startDateTime && (
+          {errors.name && (
             <FormHelperText 
               sx={{ color: 'error.main' }}
               id='validation-message'
@@ -150,25 +126,84 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             </FormHelperText>
           )}
         </FormControl>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center", marginY: "10px" }}>
-        <Typography sx={{ width: '230px'}} align="left">End Date and Time:</Typography>
+        <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+          <Typography sx={{ width: '230px'}} align="left">Start Date and Time:</Typography>
+          <FormControl fullWidth>
+            <Controller 
+              name='startDateTime'
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange }}) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <MobileDateTimePicker
+                    key={key}
+                    defaultValue={dayjs(value)}
+                    onChange={(date) => {onChange(date?.toDate())}}
+                  />
+                </LocalizationProvider>
+              )}
+            />
+            {errors.startDateTime && (
+              <FormHelperText 
+                sx={{ color: 'error.main' }}
+                id='validation-message'
+              >
+              This field is required
+              </FormHelperText>
+            )}
+          </FormControl>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", marginY: "10px" }}>
+          <Typography sx={{ width: '230px'}} align="left">End Date and Time:</Typography>
+          <FormControl fullWidth>
+            <Controller 
+              name='endDateTime'
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange }}) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <MobileDateTimePicker
+                    key={key}
+                    defaultValue={dayjs(value)}
+                    onChange={(date) => {onChange(date?.toDate())}}
+                  />
+                </LocalizationProvider>
+              )}
+            />
+            {errors.endDateTime && (
+              <FormHelperText 
+                sx={{ color: 'error.main' }}
+                id='validation-message'
+              >
+              This field is required
+              </FormHelperText>
+            )}
+          </FormControl>
+        </Box>
         <FormControl fullWidth>
           <Controller 
-            name='endDateTime'
+            name='comments'
             control={control}
-            rules={{ required: true }}
+            rules={{ required: false }}
             render={({ field: { value, onChange }}) => (
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileDateTimePicker
-                  key={key}
-                  defaultValue={dayjs(value)}
-                  onChange={(date) => {onChange(date?.toDate())}}
-                />
-              </LocalizationProvider>
+              <TextField 
+                type='text'
+                label='Comments'
+                variant='outlined'
+                multiline
+                rows={5}
+                color='info'
+                value={value}
+                onChange={(e) => {
+                  onChange(e)
+                  setValue('comments', e.target.value)
+                }}
+                error={Boolean(errors.comments)}
+                fullWidth={true}
+              />
             )}
           />
-          {errors.endDateTime && (
+          {errors.comments && (
             <FormHelperText 
               sx={{ color: 'error.main' }}
               id='validation-message'
@@ -177,41 +212,9 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             </FormHelperText>
           )}
         </FormControl>
-      </Box>
-      <FormControl fullWidth>
-        <Controller 
-          name='comments'
-          control={control}
-          rules={{ required: false }}
-          render={({ field: { value, onChange }}) => (
-            <TextField 
-              type='text'
-              label='Comments'
-              variant='outlined'
-              multiline
-              rows={5}
-              color='info'
-              value={value}
-              onChange={(e) => {
-                onChange(e)
-                setValue('comments', e.target.value)
-              }}
-              error={Boolean(errors.comments)}
-              fullWidth={true}
-            />
-          )}
-        />
-        {errors.comments && (
-          <FormHelperText 
-            sx={{ color: 'error.main' }}
-            id='validation-message'
-          >
-          This field is required
-          </FormHelperText>
-        )}
-      </FormControl>
-      <Button type='submit' variant='contained'>Submit</Button>
-    </form>
+        <Button type='submit' variant='contained'>{editAppointment ? "Update Appointment" : "Book Appointment"}</Button>
+      </form>
+    </Box>
   )
 }
 
