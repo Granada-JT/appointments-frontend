@@ -23,19 +23,19 @@ function App() {
   const [startDate, setStartDate] = useState<Date>(new Date);
   const [endDate, setEndDate] = useState<Date>(new Date(new Date().getTime() + 86400000));
 
-  useEffect(() => {
-    const fetchAppointments = async() => {
-      try {
-        const response = await getAppointments()
-        setAppointments(response)
-        
-      } catch(error) {
-        if (error instanceof Error) {
-          alert(error.message)
-        }
+  const fetchAppointments = async() => {
+    try {
+      const response = await getAppointments()
+      setAppointments(response)
+      
+    } catch(error) {
+      if (error instanceof Error) {
+        alert(error.message)
       }
     }
+  }
 
+  useEffect(() => {
     fetchAppointments()
   }, [])
 
@@ -82,7 +82,11 @@ function App() {
             />
           </Box>
           <Box className="app-box">
-            <AppointmentForm editAppointment={editAppointment}/>
+            <AppointmentForm
+              editAppointment={editAppointment}
+              fetchAppointments={fetchAppointments}
+              setEditAppointment={setEditAppointment}
+            />
           </Box>
         </Box>
       </Box>
