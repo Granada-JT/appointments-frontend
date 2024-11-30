@@ -6,6 +6,7 @@ import { Box, Typography } from '@mui/material';
 import { getAppointments } from './api/api';
 
 interface AppointmentTypes {
+  id: number;
   patient_name: string;
   appointment_start_date: Date;
   appointment_start_time: Date;
@@ -16,7 +17,9 @@ interface AppointmentTypes {
 
 function App() {
   const [appointments, setAppointments] = useState<AppointmentTypes[]>([]);
+  const [editAppointment, setEditAppointment] = useState<AppointmentTypes>()
   const [rows, setRows] = useState<AppointmentTypes[]>([]);
+  const [editRowId, setEditRowId] = useState<number>(0);
   const [startDate, setStartDate] = useState<Date>(new Date);
   const [endDate, setEndDate] = useState<Date>(new Date(new Date().getTime() + 86400000));
 
@@ -50,6 +53,17 @@ function App() {
     handleDateFilter();
   }, [startDate, endDate, appointments])
 
+  useEffect(() => { 
+    const findRowId = () => {
+      const row = rows.find((row) => row.id === editRowId);
+      if (row) {
+        setEditAppointment(row);
+      }
+    }
+
+    findRowId()
+  }, [editRowId])
+
   return (
     <Box className="app">
       <Box className="app-header">
@@ -64,10 +78,11 @@ function App() {
               setStartDate={setStartDate}
               endDate={endDate}
               setEndDate={setEndDate}
+              setEditRowId={setEditRowId}
             />
           </Box>
           <Box className="app-box">
-            <AppointmentForm />
+            <AppointmentForm editAppointment={editAppointment}/>
           </Box>
         </Box>
       </Box>

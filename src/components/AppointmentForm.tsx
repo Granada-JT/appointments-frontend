@@ -12,6 +12,21 @@ import {
 } from '@mui/material';
 import { createAppointment } from '../api/api';
 import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+
+interface AppointmentTypes {
+  id: number;
+  patient_name: string;
+  appointment_start_date: Date;
+  appointment_start_time: Date;
+  appointment_end_date: Date;
+  appointment_end_time: Date;
+  comments: string;
+}
+
+interface AppointmentFormProps {
+  editAppointment: AppointmentTypes | undefined
+}
 
 interface FormDataTypes {
   name: string;
@@ -44,7 +59,9 @@ const onSubmit = async (data: FormDataTypes) => {
   }
 }
 
-const AppointmentForm = () => {
+const AppointmentForm = (props: AppointmentFormProps) => {
+  const [key, setKey] = useState<number>(0)
+  const { editAppointment } = props;
   const {
     control,
     formState: { errors },
@@ -52,12 +69,28 @@ const AppointmentForm = () => {
     setValue
   } = useForm({
     defaultValues: {
-    name: '',
-    startDateTime: new Date,
-    endDateTime: new Date(new Date().getTime() + 60 * 60 * 1000),
-    comments: ''
+      name: '',
+      startDateTime: new Date,
+      endDateTime: new Date(new Date().getTime() + 60 * 60 * 1000),
+      comments: ''
     }
   })
+
+  useEffect(() => {
+    if (editAppointment) {
+      setValue('name', editAppointment.patient_name);
+      setValue(
+        'startDateTime', 
+        new Date(`${editAppointment.appointment_start_date} ${editAppointment.appointment_start_time}`)
+      );
+      setValue(
+        'endDateTime', 
+        new Date(`${editAppointment.appointment_end_date} ${editAppointment.appointment_end_time}`)
+      );
+      setValue('comments', editAppointment.comments);
+      setKey(prevKey => prevKey + 1)
+    }
+  }, [editAppointment]);
 	
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -101,6 +134,7 @@ const AppointmentForm = () => {
             render={({ field: { value, onChange }}) => (
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDateTimePicker
+                  key={key}
                   defaultValue={dayjs(value)}
                   onChange={(date) => {onChange(date?.toDate())}}
                 />
@@ -127,6 +161,7 @@ const AppointmentForm = () => {
             render={({ field: { value, onChange }}) => (
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDateTimePicker
+                  key={key}
                   defaultValue={dayjs(value)}
                   onChange={(date) => {onChange(date?.toDate())}}
                 />

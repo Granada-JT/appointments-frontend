@@ -7,6 +7,7 @@ import { Box, Button, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
 interface AppointmentTypes {
+  id: number;
   patient_name: string;
   appointment_start_date: Date;
   appointment_start_time: Date;
@@ -21,6 +22,7 @@ interface AppointmentsTableProps {
   setStartDate: (date: Date) => void;
   endDate: Date;
   setEndDate: (date: Date) => void;
+  setEditRowId: (id: number) => void;
 }
 
 const AppointmentsTable = (props: AppointmentsTableProps) => {
@@ -29,7 +31,8 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     startDate,
     setStartDate,
     endDate,
-    setEndDate
+    setEndDate,
+    setEditRowId
   } = props;
 
   const columns: GridColDef[] = [
@@ -148,7 +151,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', height: '100%' }}>
-            <Button color="info" variant="contained">Edit</Button>
+            <Button color="info" variant="contained" onClick={() => setEditRowId(row.id)}>Edit</Button>
             <Button color="error" variant="contained">Delete</Button>
           </Box>
         );
