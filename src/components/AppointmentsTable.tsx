@@ -1,7 +1,14 @@
+import { useState } from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 
 const AppointmentsTable = () => {
+  const [startDate, setStartDate] = useState<Date>(new Date);
+  const [endDate, setEndDate] = useState<Date>(new Date(new Date().getTime() + 86400000));
 
   const columns: GridColDef[] = [
     { 
@@ -10,7 +17,7 @@ const AppointmentsTable = () => {
       width: 120,
       renderCell: ({ row }: any) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Typography
               component='a'
               variant='body2'
@@ -28,7 +35,7 @@ const AppointmentsTable = () => {
       width: 90,
       renderCell: ({ row }: any) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Typography
               component='a'
               variant='body2'
@@ -46,7 +53,7 @@ const AppointmentsTable = () => {
       width: 90,
       renderCell: ({ row }: any) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Typography
               component='a'
               variant='body2'
@@ -64,7 +71,7 @@ const AppointmentsTable = () => {
       width: 90,
       renderCell: ({ row }: any) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Typography
               component='a'
               variant='body2'
@@ -82,7 +89,7 @@ const AppointmentsTable = () => {
       width: 90,
       renderCell: ({ row }: any) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Typography
               component='a'
               variant='body2'
@@ -100,7 +107,7 @@ const AppointmentsTable = () => {
       width: 150,
       renderCell: ({ row }: any) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Typography
               component='a'
               variant='body2'
@@ -149,13 +156,41 @@ const AppointmentsTable = () => {
   ]
 
   return (
-    <DataGrid
-      getRowId={(row: any) => row.id}
-      rows={rows}
-      columns={columns}
-    />
+    <Box sx={{ width: "100%" }}>
+      <Typography>Filter By Date</Typography>
+      <Box sx={{ display: "flex", alignItems: "center", gap: "5px", my: "10px" }}>
+        <Typography>From:</Typography>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+          defaultValue={dayjs(startDate)}
+          onChange={(date) => {
+            if (date) {
+              setStartDate(date.toDate())
+            }
+          }}
+          />
+        </LocalizationProvider>
+        <Typography>To:</Typography>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+          defaultValue={dayjs(endDate)}
+          onChange={(date) => {
+            if (date) {
+              setEndDate(date.toDate())
+            }
+          }}
+          />
+        </LocalizationProvider>
+      </Box>
+      <Box sx={{ height: "400px"}}>
+        <DataGrid
+          getRowId={(row: any) => row.id}
+          rows={rows}
+          columns={columns}
+        />
+      </Box>
+    </Box>
   )
-
 }
 
 export default AppointmentsTable;
