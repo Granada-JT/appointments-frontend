@@ -2,11 +2,11 @@ import axios from 'axios';
 
 export const getAppointments = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/appointment/`);
     return response.data;
   } catch(error) {
     console.error(error);
-    return error.message
+    throw new Error(error.response.data.error)
   }
 }
 
