@@ -1,3 +1,4 @@
+import { createAppointment } from '../api/api';
 import { Controller, useForm } from 'react-hook-form';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -20,8 +21,28 @@ interface FormDataTypes {
   comments: string;
 }
 
-const onSubmit = (data: FormDataTypes) => {
-  alert('Appointment Successfully Booked')
+const onSubmit = async (data: FormDataTypes) => {
+  try {
+    if (data) {
+      const appointmentData = {
+        patientName: data.name,
+        appointmentStartDate: data.startDateTime?.toLocaleDateString(),
+        appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        appointmentEndDate: data.endDateTime?.toLocaleDateString(),
+        appointmentEndTime: data.endDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        comments: data.comments
+      }
+
+      const response = await createAppointment(appointmentData);
+      if (response.status === 201) {
+        alert('Appointment Booked Successfully');
+      }
+    }
+  } catch(error) {
+    if (error instanceof Error) {
+      alert(error.message)
+    }
+  }
 }
 
 const AppointmentForm = () => {
@@ -82,6 +103,11 @@ const AppointmentForm = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDateTimePicker
                   defaultValue={dayjs(value)}
+                  // onChange={(date) => {
+                  //   if (date) {
+                  //     onChange(new Date(date.toDate()))
+                  //   }
+                  // }}
                   onChange={(date) => {onChange(date?.toDate())}}
                 />
               </LocalizationProvider>
