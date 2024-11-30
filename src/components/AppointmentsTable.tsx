@@ -16,13 +16,21 @@ interface AppointmentTypes {
 }
 
 interface AppointmentsTableProps {
-  rows: AppointmentTypes[]
+  rows: AppointmentTypes[];
+  startDate: Date;
+  setStartDate: (date: Date) => void;
+  endDate: Date;
+  setEndDate: (date: Date) => void;
 }
 
 const AppointmentsTable = (props: AppointmentsTableProps) => {
-  const { rows } = props;
-  const [startDate, setStartDate] = useState<Date>(new Date);
-  const [endDate, setEndDate] = useState<Date>(new Date(new Date().getTime() + 86400000));
+  const {
+    rows,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate
+  } = props;
 
   const columns: GridColDef[] = [
     { 
