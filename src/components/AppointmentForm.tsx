@@ -75,7 +75,6 @@ const AppointmentForm = (props: AppointmentFormProps) => {
     try {
       if (data && editAppointment) {
         const appointmentData = {
-          id: editAppointment.id,
           patientName: data.name,
           appointmentStartDate: data.startDateTime?.toLocaleDateString(),
           appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -84,7 +83,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           comments: data.comments
         }
 
-        const response = await editAppointmentApi(appointmentData);
+        const response = await editAppointmentApi(editAppointment.id,appointmentData);
         if (response.status === 200) {
           fetchAppointments();
           setEditAppointment(undefined);
