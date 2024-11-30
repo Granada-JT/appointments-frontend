@@ -15,7 +15,10 @@ interface AppointmentTypes {
 }
 
 function App() {
-  const [appointments, setAppointments] = useState<AppointmentTypes[]>([])
+  const [appointments, setAppointments] = useState<AppointmentTypes[]>([]);
+  const [rows, setRows] = useState<AppointmentTypes[]>([]);
+  const [startDate, setStartDate] = useState<Date>(new Date);
+  const [endDate, setEndDate] = useState<Date>(new Date(new Date().getTime() + 86400000));
 
   useEffect(() => {
     const fetchAppointments = async() => {
@@ -33,6 +36,20 @@ function App() {
     fetchAppointments()
   }, [])
 
+  useEffect(() => {
+    const handleDateFilter = () => {
+      if (appointments.length > 0) {
+        const filteredAppointments = appointments.filter(appointment => {
+          const appointmentStartDate = new Date(appointment.appointment_start_date);
+          const appointmentEndDate = new Date(appointment.appointment_end_date);
+          return appointmentStartDate >= startDate && appointmentEndDate <= endDate;
+        });
+        setRows(filteredAppointments);
+      }
+    }
+    handleDateFilter();
+  }, [startDate, endDate, appointments])
+
   return (
     <Box className="app">
       <Box className="app-header">
@@ -41,7 +58,13 @@ function App() {
         </Typography>
         <Box className="app-body">
           <Box className="app-box">
-            <AppointmentsTable rows={appointments} />
+            <AppointmentsTable
+              rows={rows}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+            />
           </Box>
           <Box className="app-box">
             <AppointmentForm />
