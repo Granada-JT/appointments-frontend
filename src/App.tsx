@@ -79,6 +79,7 @@ function App() {
               endDate={endDate}
               setEndDate={setEndDate}
               setEditRowId={setEditRowId}
+              fetchAppointments={fetchAppointments}
             />
           </Box>
           <Box className="app-box">
