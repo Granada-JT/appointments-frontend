@@ -23,9 +23,9 @@ export const createAppointment = async (data) => {
   }
 }
 
-export const editAppointment = async (data) => {
+export const editAppointment = async (id, data) => {
   try {
-    const response = await axios.patch(`${process.env.REACT_APP_API_URL}/appointment/edit`, data);
+    const response = await axios.patch(`${process.env.REACT_APP_API_URL}/appointment/edit/${id}`, data);
     return {
       status: response.status,
       message: response.data.message
@@ -36,10 +36,9 @@ export const editAppointment = async (data) => {
   }
 }
 
-export const deleteAppointment = async (data) => {
-  console.log('data',data)
+export const deleteAppointment = async (id) => {
   try {
-    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/appointment/delete/${data}`);
+    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/appointment/delete/${id}`);
     return {
       status: response.status,
       message: response.data.message
