@@ -10,7 +10,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { createAppointment } from '../api/api';
+import { createAppointment, editAppointment as editAppointmentApi } from '../api/api';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
@@ -25,7 +25,9 @@ interface AppointmentTypes {
 }
 
 interface AppointmentFormProps {
-  editAppointment: AppointmentTypes | undefined
+  editAppointment: AppointmentTypes | undefined;
+  setEditAppointment: (appointment: AppointmentTypes | undefined) => void;
+  fetchAppointments: () => void;
 }
 
 interface FormDataTypes {
@@ -35,37 +37,14 @@ interface FormDataTypes {
   comments: string;
 }
 
-const onSubmit = async (data: FormDataTypes) => {
-  try {
-    if (data) {
-      const appointmentData = {
-        patientName: data.name,
-        appointmentStartDate: data.startDateTime?.toLocaleDateString(),
-        appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        appointmentEndDate: data.endDateTime?.toLocaleDateString(),
-        appointmentEndTime: data.endDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        comments: data.comments
-      }
-
-      const response = await createAppointment(appointmentData);
-      if (response.status === 201) {
-        alert('Appointment Booked Successfully');
-      }
-    }
-  } catch(error) {
-    if (error instanceof Error) {
-      alert(error.message)
-    }
-  }
-}
-
 const AppointmentForm = (props: AppointmentFormProps) => {
   const [key, setKey] = useState<number>(0)
-  const { editAppointment } = props;
+  const { editAppointment, setEditAppointment, fetchAppointments } = props;
   const {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
     setValue
   } = useForm({
     defaultValues: {
@@ -91,6 +70,50 @@ const AppointmentForm = (props: AppointmentFormProps) => {
       setKey(prevKey => prevKey + 1)
     }
   }, [editAppointment]);
+
+  const onSubmit = async (data: FormDataTypes) => {
+    try {
+  
+      if (data && editAppointment) {
+        const appointmentData = {
+          id: editAppointment.id,
+          patientName: data.name,
+          appointmentStartDate: data.startDateTime?.toLocaleDateString(),
+          appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          appointmentEndDate: data.endDateTime?.toLocaleDateString(),
+          appointmentEndTime: data.endDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          comments: data.comments
+        }
+
+        const response = await editAppointmentApi(appointmentData);
+        if (response.status === 200) {
+          fetchAppointments();
+          setEditAppointment(undefined);
+          alert('Appointment Updated Successfully');
+          reset();
+          setKey(prevKey => prevKey + 1);
+        }
+      } else if (data) {
+        const appointmentData = {
+          patientName: data.name,
+          appointmentStartDate: data.startDateTime?.toLocaleDateString(),
+          appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          appointmentEndDate: data.endDateTime?.toLocaleDateString(),
+          appointmentEndTime: data.endDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          comments: data.comments
+        }
+  
+        const response = await createAppointment(appointmentData);
+        if (response.status === 201) {
+          alert('Appointment Booked Successfully');
+        }
+      }
+    } catch(error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+  }  
 	
   return (
     <Box>
