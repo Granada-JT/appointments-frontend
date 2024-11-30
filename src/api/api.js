@@ -25,11 +25,14 @@ export const createAppointment = async (data) => {
 
 export const editAppointment = async (data) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/edit`, data);
-    return response.data;
+    const response = await axios.patch(`${process.env.REACT_APP_API_URL}/appointment/edit`, data);
+    return {
+      status: response.status,
+      message: response.data.message
+    };
   } catch(error) {
     console.error(error);
-    return error.message
+    throw new Error(error.response.data.error)
   }
 }
 
