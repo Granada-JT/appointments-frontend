@@ -1,10 +1,7 @@
-import { createAppointment } from '../api/api';
-import { Controller, useForm } from 'react-hook-form';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-
+import { Controller, useForm } from 'react-hook-form';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   Box,
   Button,
@@ -13,6 +10,8 @@ import {
   TextField,
   Typography
 } from '@mui/material';
+import { createAppointment } from '../api/api';
+import dayjs from 'dayjs';
 
 interface FormDataTypes {
   name: string;
@@ -103,11 +102,6 @@ const AppointmentForm = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDateTimePicker
                   defaultValue={dayjs(value)}
-                  // onChange={(date) => {
-                  //   if (date) {
-                  //     onChange(new Date(date.toDate()))
-                  //   }
-                  // }}
                   onChange={(date) => {onChange(date?.toDate())}}
                 />
               </LocalizationProvider>
