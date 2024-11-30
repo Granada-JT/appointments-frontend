@@ -54,7 +54,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     { 
       field: 'appointmentStartDate', 
       headerName: 'Start Date', 
-      width: 90,
+      width: 115,
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -72,7 +72,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     { 
       field: 'appointmentEndDate', 
       headerName: 'End Date', 
-      width: 90,
+      width: 115,
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -90,7 +90,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     { 
       field: 'appointmentStartTime', 
       headerName: 'Start Time', 
-      width: 90,
+      width: 117,
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -108,7 +108,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     { 
       field: 'appointmentEndTime', 
       headerName: 'End Time', 
-      width: 90,
+      width: 115,
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -188,6 +188,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
           getRowId={(row: any) => row.id}
           rows={rows}
           columns={columns}
+          disableColumnMenu={true}
         />
       </Box>
     </Box>
