@@ -6,7 +6,21 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
-const AppointmentsTable = () => {
+interface AppointmentTypes {
+  patient_name: string;
+  appointment_start_date: Date;
+  appointment_start_time: Date;
+  appointment_end_date: Date;
+  appointment_end_time: Date;
+  comments: string;
+}
+
+interface AppointmentsTableProps {
+  rows: AppointmentTypes[]
+}
+
+const AppointmentsTable = (props: AppointmentsTableProps) => {
+  const { rows } = props;
   const [startDate, setStartDate] = useState<Date>(new Date);
   const [endDate, setEndDate] = useState<Date>(new Date(new Date().getTime() + 86400000));
 
@@ -23,7 +37,7 @@ const AppointmentsTable = () => {
               variant='body2'
               sx={{ fontWeight: 600, color: 'text.primary', textDecoration: 'none' }}
             >
-              {row.patientName}
+              {row.patient_name}
             </Typography>
           </Box>
         );
@@ -41,7 +55,7 @@ const AppointmentsTable = () => {
               variant='body2'
               sx={{ fontWeight: 600, color: 'text.primary', textDecoration: 'none' }}
             >
-              {row.appointmentStartDate}
+              {row.appointment_start_date}
             </Typography>
           </Box>
         );
@@ -59,7 +73,7 @@ const AppointmentsTable = () => {
               variant='body2'
               sx={{ fontWeight: 600, color: 'text.primary', textDecoration: 'none' }}
             >
-              {row.appointmentEndDate}
+              {row.appointment_end_date}
             </Typography>
           </Box>
         );
@@ -77,7 +91,7 @@ const AppointmentsTable = () => {
               variant='body2'
               sx={{ fontWeight: 600, color: 'text.primary', textDecoration: 'none' }}
             >
-              {row.appointmentStartTime}
+              {row.appointment_start_time}
             </Typography>
           </Box>
         );
@@ -95,7 +109,7 @@ const AppointmentsTable = () => {
               variant='body2'
               sx={{ fontWeight: 600, color: 'text.primary', textDecoration: 'none' }}
             >
-              {row.appointmentEndTime}
+              {row.appointment_end_time}
             </Typography>
           </Box>
         );
@@ -131,27 +145,6 @@ const AppointmentsTable = () => {
           </Box>
         );
       }
-    }
-  ]
-
-  const rows = [
-    {
-      id: 1,
-      patientName: 'd',
-      appointmentStartDate: '11/30/2024',
-      appointmentStartTime: '03:34 PM',
-      appointmentEndDate: '11/30/2024',
-      appointmentEndTime: '04:34 PM',
-      comments: ''
-    },
-    {
-      id: 2,
-      patientName: 'g',
-      appointmentStartDate: '11/19/2024',
-      appointmentStartTime: '03:34 PM',
-      appointmentEndDate: '11/22/2024',
-      appointmentEndTime: '04:34 PM',
-      comments: 'Nonumy est vero feugait erat euismod labore veniam magna dignissim et vulputate esse vel nonumy et sed et stet. Ipsum iriure rebum nibh diam eirmod nisl. Accusam invidunt accusam et sit soluta amet invidunt. Justo sanctus est et sea velit gubergren duis clita kasd rebum sanctus ipsum sadipscing ullamcorper sit. Et sanctus in dolore vel tation. Tincidunt ipsum sea ex aliquip eos tempor adipiscing consequat dolore sea kasd tation dolor nostrud gubergren tempor duo ea. Hendrerit sit duo aliquyam eu eirmod illum justo lobortis dolor dolor suscipit. Dolore et ea sed erat takimata et et ipsum ipsum et ut. Esse duo nulla justo ut vel volutpat et nobis sadipscing tempor diam accusam volutpat. Amet sed diam vero. Sit laoreet justo takimata ea. Gubergren sadipscing blandit elitr dolore.'
     }
   ]
 
