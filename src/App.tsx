@@ -19,7 +19,7 @@ interface AppointmentTypes {
 function App() {
   const [appointments, setAppointments] = useState<AppointmentTypes[]>([]);
   const [editAppointment, setEditAppointment] = useState<AppointmentTypes>();
-  const [rows, setRows] = useState<AppointmentTypes[]>([]);
+  const [rows, setRows] = useState<AppointmentTypes[] | undefined>([]);
   const [editRowId, setEditRowId] = useState<number>(0);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(
@@ -55,6 +55,8 @@ function App() {
           );
         });
         setRows(filteredAppointments);
+      } else {
+        setRows(undefined);
       }
     };
     handleDateFilter();
@@ -62,7 +64,7 @@ function App() {
 
   useEffect(() => {
     const findRowId = () => {
-      const row = rows.find((row) => row.id === editRowId);
+      const row = rows?.find((row) => row.id === editRowId);
       if (row) {
         setEditAppointment(row);
       }
