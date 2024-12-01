@@ -14,6 +14,7 @@ export default [
       globals: {
         ...globals.node,
         localStorage: true,
+        document: true,
       },
       parser: tsParser,
       parserOptions: {
@@ -28,7 +29,10 @@ export default [
       react: react,
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-explicit-any": "warn",
       "react/jsx-uses-vars": "error",
       "no-undef": "off",

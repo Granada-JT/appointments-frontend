@@ -1,27 +1,30 @@
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Controller, useForm } from 'react-hook-form';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   Box,
   Button,
   FormControl,
   FormHelperText,
   TextField,
-  Typography
-} from '@mui/material';
-import { createAppointment, editAppointment as editAppointmentApi } from '../api/api';
-import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+  Typography,
+} from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import {
+  createAppointment,
+  editAppointment as editAppointmentApi,
+} from "../api/api";
+import toast, { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
+import dayjs from "dayjs";
 
 interface AppointmentTypes {
   id: number;
   patient_name: string;
-  appointment_start_date: Date;
-  appointment_start_time: Date;
-  appointment_end_date: Date;
-  appointment_end_time: Date;
+  appointment_start_date: string;
+  appointment_start_time: string;
+  appointment_end_date: string;
+  appointment_end_time: string;
   comments: string;
 }
 
@@ -46,70 +49,87 @@ const AppointmentForm = (props: AppointmentFormProps) => {
     setEditAppointment,
     setEditRowId,
     fetchAppointments,
-    appointments
+    appointments,
   } = props;
 
-  const [key, setKey] = useState<number>(0)
+  const [key, setKey] = useState<number>(0);
   const [isStartDateOverlap, setIsStartDateOverlap] = useState<boolean>(false);
   const [isEndDateOverlap, setIsEndDateOverlap] = useState<boolean>(false);
-  
+
   const {
     control,
     formState: { errors },
     handleSubmit,
     reset,
     getValues,
-    setValue
+    setValue,
   } = useForm({
     defaultValues: {
-      name: '',
-      startDateTime: new Date,
+      name: "",
+      startDateTime: new Date(),
       endDateTime: new Date(new Date().getTime() + 60 * 60 * 1000),
-      comments: ''
-    }
-  })
+      comments: "",
+    },
+  });
 
   useEffect(() => {
     if (editAppointment) {
-      setValue('name', editAppointment.patient_name);
+      setValue("name", editAppointment.patient_name);
       setValue(
-        'startDateTime', 
-        new Date(`${editAppointment.appointment_start_date} ${editAppointment.appointment_start_time}`)
+        "startDateTime",
+        new Date(
+          `${editAppointment.appointment_start_date} ${editAppointment.appointment_start_time}`,
+        ),
       );
       setValue(
-        'endDateTime', 
-        new Date(`${editAppointment.appointment_end_date} ${editAppointment.appointment_end_time}`)
+        "endDateTime",
+        new Date(
+          `${editAppointment.appointment_end_date} ${editAppointment.appointment_end_time}`,
+        ),
       );
-      setValue('comments', editAppointment.comments);
-      setKey(prevKey => prevKey + 1)
+      setValue("comments", editAppointment.comments);
+      setKey((prevKey) => prevKey + 1);
     }
   }, [editAppointment]);
 
   const handleOverBooking = () => {
-    const startDateTime = getValues('startDateTime');
-    const endDateTime = getValues('endDateTime');
+    const startDateTime = getValues("startDateTime");
+    const endDateTime = getValues("endDateTime");
     let hasStartOverlap = false;
     let hasEndOverlap = false;
-  
+
     appointments.forEach((appointment) => {
-      const appointmentStart = new Date(`${appointment.appointment_start_date} ${appointment.appointment_start_time}`);
-      const appointmentEnd = new Date(`${appointment.appointment_end_date} ${appointment.appointment_end_time}`);
-  
+      const appointmentStart = new Date(
+        `${appointment.appointment_start_date} ${appointment.appointment_start_time}`,
+      );
+      const appointmentEnd = new Date(
+        `${appointment.appointment_end_date} ${appointment.appointment_end_time}`,
+      );
+
       if (editAppointment && editAppointment.id === appointment.id) {
         // Allow date / time edits within the original range of the appointment being edited
-        const editAppointmentStart = new Date(`${editAppointment.appointment_start_date} ${editAppointment.appointment_start_time}`);
-        const editAppointmentEnd = new Date(`${editAppointment.appointment_end_date} ${editAppointment.appointment_end_time}`);
-  
+        const editAppointmentStart = new Date(
+          `${editAppointment.appointment_start_date} ${editAppointment.appointment_start_time}`,
+        );
+        const editAppointmentEnd = new Date(
+          `${editAppointment.appointment_end_date} ${editAppointment.appointment_end_time}`,
+        );
+
         if (
-          (startDateTime >= editAppointmentStart && startDateTime <= editAppointmentEnd) ||
-          (endDateTime >= editAppointmentStart && endDateTime <= editAppointmentEnd)
+          (startDateTime >= editAppointmentStart &&
+            startDateTime <= editAppointmentEnd) ||
+          (endDateTime >= editAppointmentStart &&
+            endDateTime <= editAppointmentEnd)
         ) {
           return;
         }
       }
-  
+
       // Overlap validation
-      if (startDateTime >= appointmentStart && startDateTime <= appointmentEnd) {
+      if (
+        startDateTime >= appointmentStart &&
+        startDateTime <= appointmentEnd
+      ) {
         hasStartOverlap = true;
       }
       if (endDateTime >= appointmentStart && endDateTime <= appointmentEnd) {
@@ -131,64 +151,81 @@ const AppointmentForm = (props: AppointmentFormProps) => {
         const appointmentData = {
           patientName: data.name,
           appointmentStartDate: data.startDateTime?.toLocaleDateString(),
-          appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          appointmentStartTime: data.startDateTime?.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
           appointmentEndDate: data.endDateTime?.toLocaleDateString(),
-          appointmentEndTime: data.endDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          comments: data.comments
-        }
+          appointmentEndTime: data.endDateTime?.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          comments: data.comments,
+        };
 
-        const response = await editAppointmentApi(editAppointment.id,appointmentData);
+        const response = await editAppointmentApi(
+          editAppointment.id,
+          appointmentData,
+        );
         if (response.status === 200) {
           fetchAppointments();
           setEditAppointment(undefined);
           setEditRowId(0);
-          toast.success('Appointment Updated Successfully');
+          toast.success("Appointment Updated Successfully");
           reset();
-          setKey(prevKey => prevKey + 1);
+          setKey((prevKey) => prevKey + 1);
         }
       } else if (data) {
         const appointmentData = {
           patientName: data.name,
           appointmentStartDate: data.startDateTime?.toLocaleDateString(),
-          appointmentStartTime: data.startDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          appointmentStartTime: data.startDateTime?.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
           appointmentEndDate: data.endDateTime?.toLocaleDateString(),
-          appointmentEndTime: data.endDateTime?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          comments: data.comments
-        }
-  
+          appointmentEndTime: data.endDateTime?.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          comments: data.comments,
+        };
+
         const response = await createAppointment(appointmentData);
         if (response.status === 201) {
           reset();
           fetchAppointments();
-          toast.success('Appointment Booked Successfully');
+          toast.success("Appointment Booked Successfully");
         }
       }
-    } catch(error) {
+    } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message)
+        toast.error(error.message);
       }
     }
-  }  
-	
+  };
+
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: "10px" }}>Appointment Form</Typography>
+      <Typography variant="h5" sx={{ mb: "10px" }}>
+        Appointment Form
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl fullWidth>
-          <Controller 
-            name='name'
+          <Controller
+            name="name"
             control={control}
             rules={{ required: true }}
-            render={({ field: { value, onChange }}) => (
-              <TextField 
-                type='text'
-                label='Name'
-                variant='filled'
-                color='info'
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                type="text"
+                label="Name"
+                variant="filled"
+                color="info"
                 value={value}
                 onChange={(e) => {
-                  onChange(e)
-                  setValue('name', e.target.value)
+                  onChange(e);
+                  setValue("name", e.target.value);
                 }}
                 error={Boolean(errors.name)}
                 fullWidth={true}
@@ -196,11 +233,11 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             )}
           />
           {errors.name && (
-            <FormHelperText 
-              sx={{ color: 'error.main' }}
-              id='validation-message'
+            <FormHelperText
+              sx={{ color: "error.main" }}
+              id="validation-message"
             >
-            This field is required
+              This field is required
             </FormHelperText>
           )}
         </FormControl>
@@ -209,16 +246,19 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             fontSize: "12px",
             fontStyle: "italic",
             color: "#999",
-            mt: "10px"
+            mt: "10px",
           }}
         >
-          Note: We only accept appointments from Monday to Saturday 9:00AM to 5:00PM
+          Note: We only accept appointments from Monday to Saturday 9:00AM to
+          5:00PM
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-          <Typography sx={{ width: '230px' }} align="left">Start Date and Time:</Typography>
+          <Typography sx={{ width: "230px" }} align="left">
+            Start Date and Time:
+          </Typography>
           <FormControl fullWidth>
-            <Controller 
-              name='startDateTime'
+            <Controller
+              name="startDateTime"
               control={control}
               rules={{
                 required: true,
@@ -230,23 +270,27 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                   const hours = selectedDate.getHours();
                   const minutes = selectedDate.getMinutes();
                   if (selectedDate < currentTime) {
-                    return 'Start date passed, please enter a valid date and time';
+                    return "Start date passed, please enter a valid date and time";
                   }
 
                   if (dayOfWeek === 0) {
-                    return 'Appointments are not allowed on Sundays';
+                    return "Appointments are not allowed on Sundays";
                   }
 
-                  if (hours < 9 || (hours === 17 && minutes > 0) || hours > 17) {
-                    return 'Appointments are only allowed from 9:00AM to 5:00PM';
+                  if (
+                    hours < 9 ||
+                    (hours === 17 && minutes > 0) ||
+                    hours > 17
+                  ) {
+                    return "Appointments are only allowed from 9:00AM to 5:00PM";
                   }
 
                   if (isStartDateOverlap) {
-                    return 'Sorry, this date and time is already booked'
+                    return "Sorry, this date and time is already booked";
                   }
 
                   return true;
-                }
+                },
               }}
               render={({ field: { value, onChange } }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -257,7 +301,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                       onChange(date?.toDate());
                     }}
                     onAccept={() => {
-                      setKey(prevKey => prevKey + 1);
+                      setKey((prevKey) => prevKey + 1);
                       handleOverBooking();
                     }}
                   />
@@ -265,9 +309,9 @@ const AppointmentForm = (props: AppointmentFormProps) => {
               )}
             />
             {errors.startDateTime && (
-              <FormHelperText 
-                sx={{ color: 'error.main' }}
-                id='validation-message'
+              <FormHelperText
+                sx={{ color: "error.main" }}
+                id="validation-message"
               >
                 {errors.startDateTime.message}
               </FormHelperText>
@@ -275,37 +319,43 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           </FormControl>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", marginY: "10px" }}>
-          <Typography sx={{ width: '230px' }} align="left">End Date and Time:</Typography>
+          <Typography sx={{ width: "230px" }} align="left">
+            End Date and Time:
+          </Typography>
           <FormControl fullWidth>
-            <Controller 
-              name='endDateTime'
+            <Controller
+              name="endDateTime"
               control={control}
               rules={{
                 required: true,
                 validate: (value) => {
-                  const startDate = getValues('startDateTime');
+                  const startDate = getValues("startDateTime");
                   const selectedDate = new Date(value);
                   const dayOfWeek = selectedDate.getDay();
                   const hours = selectedDate.getHours();
                   const minutes = selectedDate.getMinutes();
                   if (selectedDate <= new Date(startDate)) {
-                    return 'Please enter a valid date range';
+                    return "Please enter a valid date range";
                   }
 
                   if (dayOfWeek === 0) {
-                    return 'Appointments are not allowed on Sundays';
+                    return "Appointments are not allowed on Sundays";
                   }
 
-                  if (hours < 9 || (hours === 17 && minutes > 0) || hours > 17) {
-                    return 'Appointments are only allowed from 9:00AM to 5:00PM';
+                  if (
+                    hours < 9 ||
+                    (hours === 17 && minutes > 0) ||
+                    hours > 17
+                  ) {
+                    return "Appointments are only allowed from 9:00AM to 5:00PM";
                   }
 
                   if (isEndDateOverlap) {
-                    return 'Sorry, this date and time is already booked'
+                    return "Sorry, this date and time is already booked";
                   }
 
                   return true;
-                }
+                },
               }}
               render={({ field: { value, onChange } }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -316,7 +366,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                       onChange(date?.toDate());
                     }}
                     onAccept={() => {
-                      setKey(prevKey => prevKey + 1)
+                      setKey((prevKey) => prevKey + 1);
                       handleOverBooking();
                     }}
                   />
@@ -324,9 +374,9 @@ const AppointmentForm = (props: AppointmentFormProps) => {
               )}
             />
             {errors.endDateTime && (
-              <FormHelperText 
-                sx={{ color: 'error.main' }}
-                id='validation-message'
+              <FormHelperText
+                sx={{ color: "error.main" }}
+                id="validation-message"
               >
                 {errors.endDateTime.message}
               </FormHelperText>
@@ -334,22 +384,22 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           </FormControl>
         </Box>
         <FormControl fullWidth>
-          <Controller 
-            name='comments'
+          <Controller
+            name="comments"
             control={control}
             rules={{ required: false }}
-            render={({ field: { value, onChange }}) => (
-              <TextField 
-                type='text'
-                label='Comments'
-                variant='outlined'
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                type="text"
+                label="Comments"
+                variant="outlined"
                 multiline
                 rows={3}
-                color='info'
+                color="info"
                 value={value}
                 onChange={(e) => {
-                  onChange(e)
-                  setValue('comments', e.target.value)
+                  onChange(e);
+                  setValue("comments", e.target.value);
                 }}
                 error={Boolean(errors.comments)}
                 fullWidth={true}
@@ -357,20 +407,22 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             )}
           />
           {errors.comments && (
-            <FormHelperText 
-              sx={{ color: 'error.main' }}
-              id='validation-message'
+            <FormHelperText
+              sx={{ color: "error.main" }}
+              id="validation-message"
             >
-            This field is required
+              This field is required
             </FormHelperText>
           )}
         </FormControl>
         <Box>
-          <Button type='submit' variant='contained' sx={{ mt: "8px" }}>{editAppointment ? "Update Appointment" : "Book Appointment"}</Button>
-          {editAppointment &&
+          <Button type="submit" variant="contained" sx={{ mt: "8px" }}>
+            {editAppointment ? "Update Appointment" : "Book Appointment"}
+          </Button>
+          {editAppointment && (
             <Button
-              variant='contained'
-              color='error'
+              variant="contained"
+              color="error"
               sx={{ ml: "10px", mt: "8px" }}
               onClick={() => {
                 reset();
@@ -380,21 +432,21 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             >
               Cancel
             </Button>
-          }
+          )}
         </Box>
       </form>
       <Toaster
         toastOptions={{
           duration: 5000,
           style: {
-            background: 'azure',
-            color: '#000000',
-            fontSize: '16px'
+            background: "azure",
+            color: "#000000",
+            fontSize: "16px",
           },
         }}
       />
     </Box>
-  )
-}
+  );
+};
 
 export default AppointmentForm;
