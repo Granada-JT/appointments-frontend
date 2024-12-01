@@ -6,6 +6,7 @@ import { deleteAppointment } from '../api/api';
 import { Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface AppointmentTypes {
   id: number;
@@ -48,12 +49,12 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
         const response = await deleteAppointment(id);
         if (response.status === 200) {
           fetchAppointments()
-          alert('Appointment Deleted Successfully');
+          toast.success('Appointment Deleted Successfully');
         }
       }
     } catch(error) {
       if (error instanceof Error) {
-        alert(error.message)
+        toast.error(error.message)
       }
     }
   }
@@ -254,6 +255,16 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
           disableColumnMenu={true}
         />
       </Box>
+      <Toaster
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: 'azure',
+            color: '#000000',
+            fontSize: '16px'
+          },
+        }}
+      />
     </Box>
   )
 }

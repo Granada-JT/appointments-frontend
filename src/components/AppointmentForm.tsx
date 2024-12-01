@@ -13,6 +13,7 @@ import {
 import { createAppointment, editAppointment as editAppointmentApi } from '../api/api';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface AppointmentTypes {
   id: number;
@@ -141,7 +142,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           fetchAppointments();
           setEditAppointment(undefined);
           setEditRowId(0);
-          alert('Appointment Updated Successfully');
+          toast.success('Appointment Updated Successfully');
           reset();
           setKey(prevKey => prevKey + 1);
         }
@@ -159,12 +160,12 @@ const AppointmentForm = (props: AppointmentFormProps) => {
         if (response.status === 201) {
           reset();
           fetchAppointments();
-          alert('Appointment Booked Successfully');
+          toast.success('Appointment Booked Successfully');
         }
       }
     } catch(error) {
       if (error instanceof Error) {
-        alert(error.message)
+        toast.error(error.message)
       }
     }
   }  
@@ -382,6 +383,16 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           }
         </Box>
       </form>
+      <Toaster
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: 'azure',
+            color: '#000000',
+            fontSize: '16px'
+          },
+        }}
+      />
     </Box>
   )
 }
