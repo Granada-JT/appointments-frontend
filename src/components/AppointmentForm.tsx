@@ -150,6 +150,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
   
         const response = await createAppointment(appointmentData);
         if (response.status === 201) {
+          reset();
           fetchAppointments();
           alert('Appointment Booked Successfully');
         }
