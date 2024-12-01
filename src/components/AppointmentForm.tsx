@@ -27,6 +27,7 @@ interface AppointmentTypes {
 interface AppointmentFormProps {
   editAppointment: AppointmentTypes | undefined;
   setEditAppointment: (appointment: AppointmentTypes | undefined) => void;
+  setEditRowId: (id: number) => void;
   fetchAppointments: () => void;
   appointments: AppointmentTypes[];
 }
@@ -39,10 +40,18 @@ interface FormDataTypes {
 }
 
 const AppointmentForm = (props: AppointmentFormProps) => {
-  const { editAppointment, setEditAppointment, fetchAppointments, appointments } = props;
+  const {
+    editAppointment,
+    setEditAppointment,
+    setEditRowId,
+    fetchAppointments,
+    appointments
+  } = props;
+
   const [key, setKey] = useState<number>(0)
   const [isStartDateOverlap, setIsStartDateOverlap] = useState<boolean>(false);
   const [isEndDateOverlap, setIsEndDateOverlap] = useState<boolean>(false);
+  
   const {
     control,
     formState: { errors },
@@ -131,6 +140,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
         if (response.status === 200) {
           fetchAppointments();
           setEditAppointment(undefined);
+          setEditRowId(0);
           alert('Appointment Updated Successfully');
           reset();
           setKey(prevKey => prevKey + 1);

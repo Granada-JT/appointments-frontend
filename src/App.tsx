@@ -89,6 +89,7 @@ function App() {
               fetchAppointments={fetchAppointments}
               setEditAppointment={setEditAppointment}
               appointments={appointments}
+              setEditRowId={setEditRowId}
             />
           </Box>
         </Box>
