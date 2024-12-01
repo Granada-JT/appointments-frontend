@@ -28,6 +28,7 @@ interface AppointmentFormProps {
   editAppointment: AppointmentTypes | undefined;
   setEditAppointment: (appointment: AppointmentTypes | undefined) => void;
   fetchAppointments: () => void;
+  appointments: AppointmentTypes[];
 }
 
 interface FormDataTypes {
@@ -38,8 +39,10 @@ interface FormDataTypes {
 }
 
 const AppointmentForm = (props: AppointmentFormProps) => {
+  const { editAppointment, setEditAppointment, fetchAppointments, appointments } = props;
   const [key, setKey] = useState<number>(0)
-  const { editAppointment, setEditAppointment, fetchAppointments } = props;
+  const [isStartDateOverlap, setIsStartDateOverlap] = useState<boolean>(false);
+  const [isEndDateOverlap, setIsEndDateOverlap] = useState<boolean>(false);
   const {
     control,
     formState: { errors },
@@ -71,6 +74,30 @@ const AppointmentForm = (props: AppointmentFormProps) => {
       setKey(prevKey => prevKey + 1)
     }
   }, [editAppointment]);
+
+  const handleOverBooking = () => {
+    const startDateTime = getValues('startDateTime');
+    const endDateTime = getValues('endDateTime');
+  
+    appointments.forEach((appointment) => {
+      const appointmentStart = new Date(`${appointment.appointment_start_date} ${appointment.appointment_start_time}`);
+      const appointmentEnd = new Date(`${appointment.appointment_end_date} ${appointment.appointment_end_time}`);
+  
+      if (startDateTime >= appointmentStart && startDateTime < appointmentEnd) {
+        setIsStartDateOverlap(true);
+      }
+  
+      if (endDateTime > appointmentStart && endDateTime <= appointmentEnd) {
+        setIsEndDateOverlap(true);
+      }
+
+      if (startDateTime <= appointmentStart && endDateTime >= appointmentEnd) {
+        setIsStartDateOverlap(true);
+        setIsEndDateOverlap(true);
+      }
+    });
+  };
+  
 
   const onSubmit = async (data: FormDataTypes) => {
     try {
@@ -149,7 +176,16 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             </FormHelperText>
           )}
         </FormControl>
-        <Typography sx={{ fontSize: "12px", fontStyle: "italic", color: "#999", mt: "10px" }}>Note: We only accept appointments from Monday to Saturday 9:00AM to 5:00PM</Typography>
+        <Typography
+          sx={{
+            fontSize: "12px",
+            fontStyle: "italic",
+            color: "#999",
+            mt: "10px"
+          }}
+        >
+          Note: We only accept appointments from Monday to Saturday 9:00AM to 5:00PM
+        </Typography>
         <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
           <Typography sx={{ width: '230px' }} align="left">Start Date and Time:</Typography>
           <FormControl fullWidth>
@@ -177,6 +213,10 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                     return 'Appointments are only allowed from 9:00AM to 5:00PM';
                   }
 
+                  if (isStartDateOverlap) {
+                    return 'Sorry, this date and time is already booked'
+                  }
+
                   return true;
                 }
               }}
@@ -185,7 +225,10 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                   <MobileDateTimePicker
                     key={key}
                     defaultValue={dayjs(value)}
-                    onChange={(date) => { onChange(date?.toDate()); }}
+                    onChange={(date) => {
+                      onChange(date?.toDate());
+                      handleOverBooking();
+                    }}
                   />
                 </LocalizationProvider>
               )}
@@ -226,6 +269,10 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                     return 'Appointments are only allowed from 9:00AM to 5:00PM';
                   }
 
+                  if (isEndDateOverlap) {
+                    return 'Sorry, this date and time is already booked'
+                  }
+
                   return true;
                 }
               }}
@@ -234,7 +281,10 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                   <MobileDateTimePicker
                     key={key}
                     defaultValue={dayjs(value)}
-                    onChange={(date) => { onChange(date?.toDate()); }}
+                    onChange={(date) => {
+                      onChange(date?.toDate());
+                      handleOverBooking();
+                    }}
                   />
                 </LocalizationProvider>
               )}
