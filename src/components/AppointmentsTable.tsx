@@ -4,6 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { deleteAppointment } from '../api/api';
 import { Box, Button, Typography } from '@mui/material';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 
 interface AppointmentTypes {
@@ -38,6 +39,8 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     fetchAppointments,
     editRowId
   } = props;
+
+  const [deleteRowId, setDeleteRowId] = useState<number>(0);
 
   const handleDeleteAppointment = async(id: number) => {
     try {
@@ -173,10 +176,41 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', height: '100%' }}>
             {editRowId === row.id ? (
               <Button variant='outlined' disabled sx={{ width: "100%" }}>Editing</Button>
+            ) : deleteRowId === row.id ? (
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    fontStyle: "italic",
+                    color: "#999",
+                    mt: "5px",
+                    mb: "-12px"
+                  }}
+                >
+                  Confirm Delete?
+                </Typography>
+                <Button
+                  variant='outlined'
+                  size='small'
+                  color='info'
+                  onClick={() => handleDeleteAppointment(row.id)}
+                >
+                  Yes
+                </Button>
+                <Button
+                  variant='outlined'
+                  size='small'
+                  color='error'
+                  onClick={() => setDeleteRowId(0)}
+                  sx={{ ml: "5px" }}
+                >
+                  No
+                </Button>
+              </Box>
             ) : (
               <>
                 <Button color="info" variant="contained" onClick={() => setEditRowId(row.id)}>Edit</Button>
-                <Button color="error" variant="contained" onClick={() => handleDeleteAppointment(row.id)}>Delete</Button>
+                <Button color="error" variant="contained" onClick={() => setDeleteRowId(row.id)}>Delete</Button>
               </>
             )}
           </Box>
