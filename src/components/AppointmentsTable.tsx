@@ -131,7 +131,6 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
       headerName: "Start Time",
       width: 117,
       renderCell: ({ row }: { row: AppointmentTypes }) => {
-        console.log("row:", row);
         return (
           <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
             <Typography
