@@ -24,6 +24,7 @@ interface AppointmentsTableProps {
   setEndDate: (date: Date) => void;
   setEditRowId: (id: number) => void;
   fetchAppointments: () => void;
+  editRowId: number;
 }
 
 const AppointmentsTable = (props: AppointmentsTableProps) => {
@@ -34,7 +35,8 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
     endDate,
     setEndDate,
     setEditRowId,
-    fetchAppointments
+    fetchAppointments,
+    editRowId
   } = props;
 
   const handleDeleteAppointment = async(id: number) => {
@@ -169,8 +171,14 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', height: '100%' }}>
-            <Button color="info" variant="contained" onClick={() => setEditRowId(row.id)}>Edit</Button>
-            <Button color="error" variant="contained" onClick={() => handleDeleteAppointment(row.id)}>Delete</Button>
+            {editRowId === row.id ? (
+              <Button variant='outlined' disabled sx={{ width: "100%" }}>Editing</Button>
+            ) : (
+              <>
+                <Button color="info" variant="contained" onClick={() => setEditRowId(row.id)}>Edit</Button>
+                <Button color="error" variant="contained" onClick={() => handleDeleteAppointment(row.id)}>Delete</Button>
+              </>
+            )}
           </Box>
         );
       }
