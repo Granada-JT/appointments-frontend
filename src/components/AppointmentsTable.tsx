@@ -19,7 +19,7 @@ interface AppointmentTypes {
 }
 
 interface AppointmentsTableProps {
-  rows: AppointmentTypes[];
+  rows: AppointmentTypes[] | undefined;
   startDate: Date;
   setStartDate: (date: Date) => void;
   endDate: Date;
