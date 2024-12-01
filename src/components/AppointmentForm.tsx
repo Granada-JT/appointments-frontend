@@ -45,6 +45,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
     formState: { errors },
     handleSubmit,
     reset,
+    getValues,
     setValue
   } = useForm({
     defaultValues: {
@@ -148,18 +149,27 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           )}
         </FormControl>
         <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-          <Typography sx={{ width: '230px'}} align="left">Start Date and Time:</Typography>
+          <Typography sx={{ width: '230px' }} align="left">Start Date and Time:</Typography>
           <FormControl fullWidth>
             <Controller 
               name='startDateTime'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange }}) => (
+              rules={{
+                required: true,
+                validate: (value) => {
+                  const currentTime = new Date();
+                  currentTime.setMinutes(currentTime.getMinutes() - 1);
+                  if (new Date(value) < currentTime) {
+                    return 'Start date passed, please enter a valid date and time'
+                  }
+                }
+              }}
+              render={({ field: { value, onChange } }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <MobileDateTimePicker
                     key={key}
                     defaultValue={dayjs(value)}
-                    onChange={(date) => {onChange(date?.toDate())}}
+                    onChange={(date) => { onChange(date?.toDate()); }}
                   />
                 </LocalizationProvider>
               )}
@@ -169,24 +179,33 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                 sx={{ color: 'error.main' }}
                 id='validation-message'
               >
-              This field is required
+                {errors.startDateTime.message}
               </FormHelperText>
             )}
           </FormControl>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", marginY: "10px" }}>
-          <Typography sx={{ width: '230px'}} align="left">End Date and Time:</Typography>
+          <Typography sx={{ width: '230px' }} align="left">End Date and Time:</Typography>
           <FormControl fullWidth>
             <Controller 
               name='endDateTime'
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange }}) => (
+              rules={{
+                required: true,
+                validate: (value) => {
+                  const startDate = getValues('startDateTime');
+                  if (new Date(value) <= new Date(startDate)) {
+                    return 'Please enter a valid date range';
+                  }
+                  return true;
+                }
+              }}
+              render={({ field: { value, onChange } }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <MobileDateTimePicker
                     key={key}
                     defaultValue={dayjs(value)}
-                    onChange={(date) => {onChange(date?.toDate())}}
+                    onChange={(date) => { onChange(date?.toDate()); }}
                   />
                 </LocalizationProvider>
               )}
@@ -196,7 +215,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                 sx={{ color: 'error.main' }}
                 id='validation-message'
               >
-              This field is required
+                {errors.endDateTime.message}
               </FormHelperText>
             )}
           </FormControl>
