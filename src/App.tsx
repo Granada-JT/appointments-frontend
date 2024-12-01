@@ -41,11 +41,12 @@ function App() {
 
   useEffect(() => {
     const handleDateFilter = () => {
+      const currentDay = new Date(startDate.setHours(0, 0, 0, 0));
       if (appointments.length > 0) {
         const filteredAppointments = appointments.filter(appointment => {
           const appointmentStartDate = new Date(appointment.appointment_start_date);
           const appointmentEndDate = new Date(appointment.appointment_end_date);
-          return appointmentStartDate >= startDate && appointmentEndDate <= endDate;
+          return appointmentStartDate >= currentDay && appointmentEndDate <= endDate;
         });
         setRows(filteredAppointments);
       }
