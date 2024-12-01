@@ -179,7 +179,7 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Typography>Filter By Date</Typography>
+      <Typography variant="h5" sx={{ mb: "10px" }}>Appointments</Typography>
       <Box sx={{ display: "flex", alignItems: "center", gap: "5px", my: "10px" }}>
         <Typography>From:</Typography>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
