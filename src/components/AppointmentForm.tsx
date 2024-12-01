@@ -13,6 +13,7 @@ import {
 import { createAppointment, editAppointment as editAppointmentApi } from '../api/api';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { start } from 'repl';
 
 interface AppointmentTypes {
   id: number;
@@ -78,25 +79,43 @@ const AppointmentForm = (props: AppointmentFormProps) => {
   const handleOverBooking = () => {
     const startDateTime = getValues('startDateTime');
     const endDateTime = getValues('endDateTime');
+    let hasStartOverlap = false;
+    let hasEndOverlap = false;
   
     appointments.forEach((appointment) => {
       const appointmentStart = new Date(`${appointment.appointment_start_date} ${appointment.appointment_start_time}`);
       const appointmentEnd = new Date(`${appointment.appointment_end_date} ${appointment.appointment_end_time}`);
   
-      if (startDateTime >= appointmentStart && startDateTime < appointmentEnd) {
-        setIsStartDateOverlap(true);
+      if (editAppointment && editAppointment.id === appointment.id) {
+        // Allow date / time edits within the original range of the appointment being edited
+        const editAppointmentStart = new Date(`${editAppointment.appointment_start_date} ${editAppointment.appointment_start_time}`);
+        const editAppointmentEnd = new Date(`${editAppointment.appointment_end_date} ${editAppointment.appointment_end_time}`);
+  
+        if (
+          (startDateTime >= editAppointmentStart && startDateTime <= editAppointmentEnd) ||
+          (endDateTime >= editAppointmentStart && endDateTime <= editAppointmentEnd)
+        ) {
+          return;
+        }
       }
   
-      if (endDateTime > appointmentStart && endDateTime <= appointmentEnd) {
-        setIsEndDateOverlap(true);
+      // Overlap validation
+      if (startDateTime >= appointmentStart && startDateTime <= appointmentEnd) {
+        hasStartOverlap = true;
       }
-
+      if (endDateTime >= appointmentStart && endDateTime <= appointmentEnd) {
+        hasEndOverlap = true;
+      }
       if (startDateTime <= appointmentStart && endDateTime >= appointmentEnd) {
-        setIsStartDateOverlap(true);
-        setIsEndDateOverlap(true);
+        hasStartOverlap = true;
+        hasEndOverlap = true;
       }
     });
+
+    setIsStartDateOverlap(hasStartOverlap);
+    setIsEndDateOverlap(hasEndOverlap);
   };
+  
   
 
   const onSubmit = async (data: FormDataTypes) => {
@@ -227,6 +246,9 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                     defaultValue={dayjs(value)}
                     onChange={(date) => {
                       onChange(date?.toDate());
+                    }}
+                    onAccept={() => {
+                      setKey(prevKey => prevKey + 1);
                       handleOverBooking();
                     }}
                   />
@@ -283,6 +305,9 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                     defaultValue={dayjs(value)}
                     onChange={(date) => {
                       onChange(date?.toDate());
+                    }}
+                    onAccept={() => {
+                      setKey(prevKey => prevKey + 1)
                       handleOverBooking();
                     }}
                   />
