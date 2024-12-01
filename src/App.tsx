@@ -4,6 +4,7 @@ import AppointmentForm from './components/AppointmentForm';
 import AppointmentsTable from './components/AppointmentsTable';
 import { Box, Typography } from '@mui/material';
 import { getAppointments } from './api/api';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface AppointmentTypes {
   id: number;
@@ -30,7 +31,7 @@ function App() {
       
     } catch(error) {
       if (error instanceof Error) {
-        alert(error.message)
+        toast.error(error.message)
       }
     }
   }
@@ -99,6 +100,16 @@ function App() {
           />
         </Box>
       </Box>
+      <Toaster
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: 'azure',
+            color: '#000000',
+            fontSize: '16px'
+          },
+        }}
+      />
     </Box>
   );
 }
