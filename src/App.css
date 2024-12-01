@@ -8,6 +8,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 30px;
 }
 
 .app-header {
@@ -29,11 +30,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   height: 500px;
   border-radius: 20px;
   border: 2px solid #ccc;
   color: #000000;
   padding: 20px;
   background-color: azure;
+}
+
+@media (width <= 1120px) {
+  .app-body {
+    flex-direction: column-reverse;
+    display: flex;
+    align-items: center;
+  }
 }

@@ -365,12 +365,12 @@ const AppointmentForm = (props: AppointmentFormProps) => {
           )}
         </FormControl>
         <Box>
-          <Button type='submit' variant='contained'>{editAppointment ? "Update Appointment" : "Book Appointment"}</Button>
+          <Button type='submit' variant='contained' sx={{ mt: "8px" }}>{editAppointment ? "Update Appointment" : "Book Appointment"}</Button>
           {editAppointment &&
             <Button
               variant='contained'
               color='error'
-              sx={{ ml: "10px" }}
+              sx={{ ml: "10px", mt: "8px" }}
               onClick={() => {
                 reset();
                 setEditRowId(0);
