@@ -13,7 +13,6 @@ import {
 import { createAppointment, editAppointment as editAppointmentApi } from '../api/api';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { start } from 'repl';
 
 interface AppointmentTypes {
   id: number;
@@ -115,8 +114,6 @@ const AppointmentForm = (props: AppointmentFormProps) => {
     setIsStartDateOverlap(hasStartOverlap);
     setIsEndDateOverlap(hasEndOverlap);
   };
-  
-  
 
   const onSubmit = async (data: FormDataTypes) => {
     try {
