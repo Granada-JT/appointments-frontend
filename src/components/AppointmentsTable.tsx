@@ -192,23 +192,23 @@ const AppointmentsTable = (props: AppointmentsTableProps) => {
         <Typography>From:</Typography>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-          defaultValue={dayjs(startDate)}
-          onChange={(date) => {
-            if (date) {
-              setStartDate(date.toDate())
-            }
-          }}
+            defaultValue={dayjs(startDate)}
+            onChange={(date) => {
+              if (date) {
+                setStartDate(date.toDate())
+              }
+            }}
           />
         </LocalizationProvider>
         <Typography>To:</Typography>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-          defaultValue={dayjs(endDate)}
-          onChange={(date) => {
-            if (date) {
-              setEndDate(date.toDate())
-            }
-          }}
+            defaultValue={dayjs(endDate)}
+            onChange={(date) => {
+              if (date) {
+                setEndDate(date.toDate())
+              }
+            }}
           />
         </LocalizationProvider>
       </Box>
