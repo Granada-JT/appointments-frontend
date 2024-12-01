@@ -148,6 +148,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             </FormHelperText>
           )}
         </FormControl>
+        <Typography sx={{ fontSize: "12px", fontStyle: "italic", color: "#999", mt: "10px" }}>Note: We only accept appointments from Monday to Saturday 9:00AM to 5:00PM</Typography>
         <Box sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
           <Typography sx={{ width: '230px' }} align="left">Start Date and Time:</Typography>
           <FormControl fullWidth>
@@ -159,9 +160,23 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                 validate: (value) => {
                   const currentTime = new Date();
                   currentTime.setMinutes(currentTime.getMinutes() - 1);
-                  if (new Date(value) < currentTime) {
-                    return 'Start date passed, please enter a valid date and time'
+                  const selectedDate = new Date(value);
+                  const dayOfWeek = selectedDate.getDay();
+                  const hours = selectedDate.getHours();
+                  const minutes = selectedDate.getMinutes();
+                  if (selectedDate < currentTime) {
+                    return 'Start date passed, please enter a valid date and time';
                   }
+
+                  if (dayOfWeek === 0) {
+                    return 'Appointments are not allowed on Sundays';
+                  }
+
+                  if (hours < 9 || (hours === 17 && minutes > 0) || hours > 17) {
+                    return 'Appointments are only allowed from 9:00AM to 5:00PM';
+                  }
+
+                  return true;
                 }
               }}
               render={({ field: { value, onChange } }) => (
@@ -194,9 +209,22 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                 required: true,
                 validate: (value) => {
                   const startDate = getValues('startDateTime');
-                  if (new Date(value) <= new Date(startDate)) {
+                  const selectedDate = new Date(value);
+                  const dayOfWeek = selectedDate.getDay();
+                  const hours = selectedDate.getHours();
+                  const minutes = selectedDate.getMinutes();
+                  if (selectedDate <= new Date(startDate)) {
                     return 'Please enter a valid date range';
                   }
+
+                  if (dayOfWeek === 0) {
+                    return 'Appointments are not allowed on Sundays';
+                  }
+
+                  if (hours < 9 || (hours === 17 && minutes > 0) || hours > 17) {
+                    return 'Appointments are only allowed from 9:00AM to 5:00PM';
+                  }
+
                   return true;
                 }
               }}
@@ -231,7 +259,7 @@ const AppointmentForm = (props: AppointmentFormProps) => {
                 label='Comments'
                 variant='outlined'
                 multiline
-                rows={5}
+                rows={3}
                 color='info'
                 value={value}
                 onChange={(e) => {
