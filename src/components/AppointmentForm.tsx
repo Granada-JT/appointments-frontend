@@ -364,7 +364,22 @@ const AppointmentForm = (props: AppointmentFormProps) => {
             </FormHelperText>
           )}
         </FormControl>
+        <Box>
         <Button type='submit' variant='contained'>{editAppointment ? "Update Appointment" : "Book Appointment"}</Button>
+        {editAppointment &&
+          <Button
+            variant='contained'
+            color='error'
+            sx={{ ml: "10px" }}
+            onClick={() => {
+              reset();
+              setEditRowId(0);
+              setEditAppointment(undefined);
+            }}
+          >
+            Cancel
+          </Button>}
+        </Box>
       </form>
     </Box>
   )
