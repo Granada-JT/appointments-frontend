@@ -68,30 +68,34 @@ function App() {
   return (
     <Box className="app">
       <Box className="app-header">
-        <Typography variant='h4' sx={{ mb: '20px' }}>
-          Book An Appointment
+        <img src="icon.svg" style={{ width: '60px', height: '60px' }} />
+        <Typography variant='h3'>
+          Doctors' Appointments
         </Typography>
-        <Box className="app-body">
-          <Box className="app-box">
-            <AppointmentsTable
-              rows={rows}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-              setEditRowId={setEditRowId}
-              fetchAppointments={fetchAppointments}
-            />
-          </Box>
-          <Box className="app-box">
-            <AppointmentForm
-              editAppointment={editAppointment}
-              fetchAppointments={fetchAppointments}
-              setEditAppointment={setEditAppointment}
-              appointments={appointments}
-              setEditRowId={setEditRowId}
-            />
-          </Box>
+      </Box>
+      <Typography variant='h5' sx={{ mb: '20px' }}>
+        Book your appointment now!
+      </Typography>
+      <Box className="app-body">
+        <Box className="app-box">
+          <AppointmentsTable
+            rows={rows}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            setEditRowId={setEditRowId}
+            fetchAppointments={fetchAppointments}
+          />
+        </Box>
+        <Box className="app-box">
+          <AppointmentForm
+            editAppointment={editAppointment}
+            fetchAppointments={fetchAppointments}
+            setEditAppointment={setEditAppointment}
+            appointments={appointments}
+            setEditRowId={setEditRowId}
+          />
         </Box>
       </Box>
     </Box>

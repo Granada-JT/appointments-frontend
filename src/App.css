@@ -1,9 +1,6 @@
 .app {
   text-align: center;
-}
-
-.app-header {
-  background-color: #282c34;
+  background: linear-gradient(135deg, #1c1f26, #282c34, #3e4451, #505661);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,6 +8,14 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .app-body {
